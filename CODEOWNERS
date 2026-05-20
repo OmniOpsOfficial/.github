@@ -1,0 +1,8 @@
+# Global Default Ownership for the OmniOps .github repository
+# Note: This file only protects this specific repository.
+
+# Require Security or DevOps approval for any changes to templates
+* @OmniOpsOfficial/security  @OmniOpsOfficial/devops
+
+# Strictly restrict the security policy to the Security team
+SECURITY.md @OmniOpsOfficial/security

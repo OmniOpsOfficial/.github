@@ -1,0 +1,14 @@
+group:
+  - files:
+      - source: 'SECURITY.md'
+        dest: 'SECURITY.md'
+      - source: 'CONTRIBUTING.md'
+        dest: 'CONTRIBUTING.md'
+      - source: 'pull_request_template.md'
+        dest: '.github/pull_request_template.md'
+      - source: 'ISSUE_TEMPLATE/bug_report.md'
+        dest: '.github/ISSUE_TEMPLATE/bug_report.md'
+      - source: 'ISSUE_TEMPLATE/feature_request.md'
+        dest: '.github/ISSUE_TEMPLATE/feature_request.md'
+    repos: |
+      OmniOpsOfficial/OmniVision-Agentic-SOC@main
