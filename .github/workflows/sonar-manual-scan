@@ -1,0 +1,50 @@
+# Place this file at: .github/workflows/sonar-manual-scan.yml
+# in a private central repo (e.g. OmniOpsOfficial/ci-workflows).
+#
+# Usage: Actions tab -> "SonarQube manual scan" -> Run workflow -> type a repo name.
+# Creates the SonarQube project on the first run, updates it on later runs.
+# Nothing is written to the target repo; no PR checks or comments are created.
+
+name: SonarQube manual scan
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "Repository name only (e.g. billing-api)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get read-only token for the target repo
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.SCAN_APP_ID }}
+          private-key: ${{ secrets.SCAN_APP_PRIVATE_KEY }}
+          repositories: ${{ inputs.repo }}
+          permission-contents: read
+
+      - name: Check out the target repo (default branch)
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/${{ inputs.repo }}
+          token: ${{ steps.app-token.outputs.token }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: SonarQube scan (creates or updates the project)
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=${{ github.repository_owner }}_${{ inputs.repo }}
+            -Dsonar.projectName=${{ inputs.repo }}
